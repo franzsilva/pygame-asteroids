@@ -11,3 +11,10 @@ PLAYER_SPEED = 200
 SHOT_RADIUS = 5
 PLAYER_SHOOT_SPEED = 500
 PLAYER_SHOOT_COOLDOWN = 0.3  # seconds between shots
+
+# Powerup constants
+POWERUP_RADIUS = 15
+POWERUP_SPAWN_RATE = 15.0  # seconds
+POWERUP_SPEED = 150
+POWERUP_DURATION = 10.0  # seconds
+POWERUP_SHOT_MULTIPLIER = 10  # Shot speed multiplier
