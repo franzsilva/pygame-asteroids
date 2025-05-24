@@ -56,7 +56,6 @@ def main():
             drawable.draw(screen)
         
         # Draw the asteroid counter in blue at the bottom right
-        font = pygame.font.SysFont(None, 36)  # Default font, size 36
         counter_text = font.render(f"{destroyed_asteroids}", True, "blue")
         counter_rect = counter_text.get_rect(bottomright=(SCREEN_WIDTH - 20, SCREEN_HEIGHT - 20))
         screen.blit(counter_text, counter_rect)
