@@ -5,6 +5,8 @@ from player import *
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
+from powerup import PowerUp
+from powerupspawner import PowerUpSpawner
 
 def main():
     pygame.init()
@@ -19,13 +21,17 @@ def main():
     drawable_group = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
     shots = pygame.sprite.Group()
+    powerups = pygame.sprite.Group()
 
     Player.containers = (updatable_group, drawable_group)
     Asteroid.containers = (asteroids, updatable_group, drawable_group)
     AsteroidField.containers = updatable_group
     Shot.containers = (shots, updatable_group, drawable_group)
+    PowerUp.containers = (powerups, updatable_group, drawable_group)
+    PowerUpSpawner.containers = updatable_group
     
     asteroid_field = AsteroidField()
+    powerup_spawner = PowerUpSpawner()
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
@@ -42,6 +48,13 @@ def main():
             if asteroid.collides_with(player):
                 print("Game over!")
                 sys.exit()
+        
+        # Check for powerup collection
+        for powerup in powerups:
+            if powerup.collides_with(player):
+                # Activate powerup
+                player.powerup_timer = POWERUP_DURATION
+                powerup.kill()  # Remove the powerup
         
         # Check collisions between bullets and asteroids
         for asteroid in asteroids:
@@ -60,6 +73,12 @@ def main():
         counter_text = font.render(f"{destroyed_asteroids}", True, "blue")
         counter_rect = counter_text.get_rect(bottomright=(SCREEN_WIDTH - 20, SCREEN_HEIGHT - 20))
         screen.blit(counter_text, counter_rect)
+        
+        # Draw the powerup timer if active
+        if player.powerup_timer > 0:
+            timer_text = font.render(f"POWERUP: {int(player.powerup_timer)}", True, "yellow")
+            timer_rect = timer_text.get_rect(midtop=(SCREEN_WIDTH / 2, 20))
+            screen.blit(timer_text, timer_rect)
         
         pygame.display.flip()
 

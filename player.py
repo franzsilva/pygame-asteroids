@@ -9,6 +9,7 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shoot_timer = 0  # Timer variable for shooting cooldown
+        self.powerup_timer = 0  # Timer for powerup duration
     
     def triangle(self):
         forward = pygame.Vector2(0, -1).rotate(self.rotation)
@@ -41,6 +42,10 @@ class Player(CircleShape):
         # Decrease the shooting timer by dt
         if self.shoot_timer > 0:
             self.shoot_timer -= dt
+            
+        # Decrease the powerup timer if active
+        if self.powerup_timer > 0:
+            self.powerup_timer -= dt
     
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -59,5 +64,10 @@ class Player(CircleShape):
             # Create the shot at the front point
             shot = Shot(front_point.x, front_point.y)
             shot.velocity = pygame.Vector2(0, -1).rotate(self.rotation)
-            shot.velocity *= PLAYER_SHOOT_SPEED
+            
+            # Apply powerup effect if active
+            if self.powerup_timer > 0:
+                shot.velocity *= PLAYER_SHOOT_SPEED * POWERUP_SHOT_MULTIPLIER
+            else:
+                shot.velocity *= PLAYER_SHOOT_SPEED
 
