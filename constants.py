@@ -26,3 +26,12 @@ EXPLOSION_DURATION = 0.8  # seconds
 EXPLOSION_PARTICLE_COUNT = 15  # number of particles per explosion
 EXPLOSION_PARTICLE_SIZE = 3  # size of explosion particles
 EXPLOSION_MAX_SPEED = 150  # maximum speed of explosion particles
+
+# Game state constants
+MENU_STATE = 0
+GAME_STATE = 1
+
+# Menu constants
+MENU_ASCII_CHAR_COUNT = 20  # Number of ASCII characters in animation
+MENU_ASCII_SPEED_MIN = 30   # Minimum speed of ASCII characters
+MENU_ASCII_SPEED_MAX = 80   # Maximum speed of ASCII characters

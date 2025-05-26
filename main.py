@@ -8,13 +8,65 @@ from shot import Shot
 from powerup import PowerUp
 from powerupspawner import PowerUpSpawner
 from explosion import ExplosionParticle, Explosion
+from menu_animation import MenuAnimation
 
-def main():
-    pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    clock = pygame.time.Clock()
-    dt = 0
+def show_menu(screen, clock):
+    """Show the game menu with options and handle selection."""
+    # Create menu animation
+    menu_animation = MenuAnimation()
     
+    # Menu options
+    menu_options = ["New Game", "Quit"]
+    selected_option = 0
+    
+    # Font setup
+    title_font = pygame.font.SysFont(None, 100)
+    option_font = pygame.font.SysFont(None, 50)
+    
+    while True:
+        dt = clock.tick(60) / 1000
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    selected_option = (selected_option - 1) % len(menu_options)
+                elif event.key == pygame.K_DOWN:
+                    selected_option = (selected_option + 1) % len(menu_options)
+                elif event.key in (pygame.K_RETURN, pygame.K_SPACE):
+                    if selected_option == 0:  # New Game
+                        return GAME_STATE
+                    elif selected_option == 1:  # Quit
+                        sys.exit()
+        
+        # Update animation
+        menu_animation.update(dt)
+        
+        # Clear screen
+        screen.fill("black")
+        
+        # Draw animation
+        menu_animation.draw(screen)
+        
+        # Draw title
+        title_text = title_font.render("ASTEROIDS", True, "white")
+        title_rect = title_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/4))
+        screen.blit(title_text, title_rect)
+        
+        # Draw menu options
+        for i, option in enumerate(menu_options):
+            color = "yellow" if i == selected_option else "white"
+            option_text = option_font.render(option, True, color)
+            option_rect = option_text.get_rect(
+                center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + i * 60)
+            )
+            screen.blit(option_text, option_rect)
+        
+        pygame.display.flip()
+
+def run_game(screen, clock):
+    """Run the actual game loop."""
     # Initialize counter for destroyed asteroids
     destroyed_asteroids = 0
     
@@ -41,7 +93,7 @@ def main():
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return
+                return MENU_STATE  # Return to menu instead of exiting directly
         dt = clock.tick(60) / 1000
 
         screen.fill("black")
@@ -50,8 +102,8 @@ def main():
         for asteroid in asteroids:
             if asteroid.collides_with(player):
                 print("Game over!")
-                sys.exit()
-        
+                return MENU_STATE  # Return to menu on game over
+
         # Check for powerup collection
         for powerup in powerups:
             if powerup.collides_with(player):
@@ -89,7 +141,25 @@ def main():
         
         pygame.display.flip()
 
+def main():
+    """Main function handling game states."""
+    pygame.init()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.display.set_caption("Asteroids")
+    clock = pygame.time.Clock()
     
+    # Start with menu state
+    game_state = MENU_STATE
+    
+    while True:
+        if game_state == MENU_STATE:
+            game_state = show_menu(screen, clock)
+        elif game_state == GAME_STATE:
+            game_state = run_game(screen, clock)
+
+
+if __name__ == "__main__":
+    main()    
 
 
 if __name__ == "__main__":
