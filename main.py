@@ -125,6 +125,7 @@ def run_game(screen, clock):
     
     asteroid_field = AsteroidField()
     powerup_spawner = PowerUpSpawner()
+    
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
     while True:
