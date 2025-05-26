@@ -18,3 +18,9 @@ POWERUP_SPAWN_RATE = 15.0  # seconds
 POWERUP_SPEED = 150
 POWERUP_DURATION = 10.0  # seconds
 POWERUP_SHOT_MULTIPLIER = 10  # Shot speed multiplier
+
+# Explosion constants
+EXPLOSION_DURATION = 0.8  # seconds
+EXPLOSION_PARTICLE_COUNT = 15  # number of particles per explosion
+EXPLOSION_PARTICLE_SIZE = 3  # size of explosion particles
+EXPLOSION_MAX_SPEED = 150  # maximum speed of explosion particles

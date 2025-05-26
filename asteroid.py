@@ -1,6 +1,7 @@
 import pygame
 from constants import *
 from circleshape import CircleShape
+from explosion import Explosion
 import math
 import random
 
@@ -15,6 +16,9 @@ class Asteroid(CircleShape):
         self.position += self.velocity * dt
     
     def split(self):
+        # Create an explosion at the asteroid's position
+        Explosion(self.position.x, self.position.y, self.radius)
+        
         # Call kill() to destroy this asteroid
         self.kill()
         
