@@ -17,7 +17,9 @@ POWERUP_RADIUS = 15
 POWERUP_SPAWN_RATE = 15.0  # seconds
 POWERUP_SPEED = 150
 POWERUP_DURATION = 10.0  # seconds
-POWERUP_SHOT_MULTIPLIER = 10  # Shot speed multiplier
+POWERUP_SHOT_MULTIPLIER = 2.5  # Shot speed multiplier (reduced from 10 for visibility)
+POWERUP_SHOOT_COOLDOWN = 0.05  # Rapid fire cooldown during powerup
+RAPID_FIRE_COOLDOWN = 0.08  # Rapid fire cooldown when holding shift
 
 # Explosion constants
 EXPLOSION_DURATION = 0.8  # seconds

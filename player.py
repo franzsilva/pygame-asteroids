@@ -20,7 +20,13 @@ class Player(CircleShape):
         return [a, b, c]
     
     def draw(self, screen):
-        pygame.draw.polygon(screen, "white", self.triangle(), 2)
+        # Add visual effect when powerup is active
+        if self.powerup_timer > 0:
+            # Draw a glowing outline when powerup is active
+            pygame.draw.polygon(screen, "cyan", self.triangle(), 4)
+            pygame.draw.polygon(screen, "white", self.triangle(), 2)
+        else:
+            pygame.draw.polygon(screen, "white", self.triangle(), 2)
     
     def rotate(self, dt):
         self.rotation += dt * PLAYER_TURN_SPEED
@@ -38,6 +44,9 @@ class Player(CircleShape):
             self.move(dt)
         if keys[pygame.K_SPACE]:
             self.shoot()
+        # Add shift key support for rapid fire
+        if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
+            self.shoot(rapid_fire=True)
             
         # Decrease the shooting timer by dt
         if self.shoot_timer > 0:
@@ -51,11 +60,18 @@ class Player(CircleShape):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
         
-    def shoot(self):
+    def shoot(self, rapid_fire=False):
+        # Determine the appropriate cooldown
+        cooldown = PLAYER_SHOOT_COOLDOWN
+        if self.powerup_timer > 0:
+            cooldown = POWERUP_SHOOT_COOLDOWN  # Very fast shooting during powerup
+        elif rapid_fire:
+            cooldown = RAPID_FIRE_COOLDOWN  # Fast shooting with shift key
+        
         # Only allow shooting if the timer is 0 or less
         if self.shoot_timer <= 0:
-            # Reset the timer to the cooldown value
-            self.shoot_timer = PLAYER_SHOOT_COOLDOWN
+            # Reset the timer to the appropriate cooldown value
+            self.shoot_timer = cooldown
             
             # Get the front point of the triangle
             forward = pygame.Vector2(0, -1).rotate(self.rotation)
@@ -68,6 +84,9 @@ class Player(CircleShape):
             # Apply powerup effect if active
             if self.powerup_timer > 0:
                 shot.velocity *= PLAYER_SHOOT_SPEED * POWERUP_SHOT_MULTIPLIER
+                # Make powerup shots more visible
+                shot.is_powerup_shot = True
             else:
                 shot.velocity *= PLAYER_SHOOT_SPEED
+                shot.is_powerup_shot = False
 

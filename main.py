@@ -79,9 +79,13 @@ def main():
         
         # Draw the powerup timer if active
         if player.powerup_timer > 0:
-            timer_text = font.render(f"POWERUP: {int(player.powerup_timer)}", True, "yellow")
+            timer_text = font.render(f"POWERUP: {int(player.powerup_timer)}", True, "cyan")
             timer_rect = timer_text.get_rect(midtop=(SCREEN_WIDTH / 2, 20))
             screen.blit(timer_text, timer_rect)
+            # Add stream mode indicator
+            stream_text = font.render("STREAM MODE ACTIVE!", True, "yellow")
+            stream_rect = stream_text.get_rect(midtop=(SCREEN_WIDTH / 2, 50))
+            screen.blit(stream_text, stream_rect)
         
         pygame.display.flip()
 
