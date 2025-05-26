@@ -51,6 +51,11 @@ python main.py
 
 ## Game Controls
 
+### Menu Controls
+- **UP/DOWN** - Navigate menu options
+- **ENTER/SPACE** - Select menu option
+
+### Game Controls
 - **W** - Move forward
 - **S** - Move backward
 - **A** - Rotate left
@@ -60,6 +65,7 @@ python main.py
 
 ## Game Features
 
+- Menu system with animated ASCII background
 - Navigate a spaceship through an asteroid field
 - Shoot asteroids to break them into smaller pieces
 - Smaller asteroids yield points when destroyed
@@ -72,7 +78,7 @@ python main.py
 
 ## Game Over
 
-The game ends when your spaceship collides with an asteroid.
+The game ends when your spaceship collides with an asteroid. You will then return to the main menu where you can start a new game or quit.
 
 ## Credits
 
