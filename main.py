@@ -7,6 +7,7 @@ from asteroidfield import AsteroidField
 from shot import Shot
 from powerup import PowerUp
 from powerupspawner import PowerUpSpawner
+from explosion import ExplosionParticle, Explosion
 
 def main():
     pygame.init()
@@ -22,6 +23,7 @@ def main():
     asteroids = pygame.sprite.Group()
     shots = pygame.sprite.Group()
     powerups = pygame.sprite.Group()
+    explosion_particles = pygame.sprite.Group()
 
     Player.containers = (updatable_group, drawable_group)
     Asteroid.containers = (asteroids, updatable_group, drawable_group)
@@ -29,6 +31,7 @@ def main():
     Shot.containers = (shots, updatable_group, drawable_group)
     PowerUp.containers = (powerups, updatable_group, drawable_group)
     PowerUpSpawner.containers = updatable_group
+    ExplosionParticle.containers = (explosion_particles, updatable_group, drawable_group)
     
     asteroid_field = AsteroidField()
     powerup_spawner = PowerUpSpawner()
@@ -76,9 +79,13 @@ def main():
         
         # Draw the powerup timer if active
         if player.powerup_timer > 0:
-            timer_text = font.render(f"POWERUP: {int(player.powerup_timer)}", True, "yellow")
+            timer_text = font.render(f"POWERUP: {int(player.powerup_timer)}", True, "cyan")
             timer_rect = timer_text.get_rect(midtop=(SCREEN_WIDTH / 2, 20))
             screen.blit(timer_text, timer_rect)
+            # Add stream mode indicator
+            stream_text = font.render("STREAM MODE ACTIVE!", True, "yellow")
+            stream_rect = stream_text.get_rect(midtop=(SCREEN_WIDTH / 2, 50))
+            screen.blit(stream_text, stream_rect)
         
         pygame.display.flip()
 

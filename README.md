@@ -56,13 +56,18 @@ python main.py
 - **A** - Rotate left
 - **D** - Rotate right
 - **SPACE** - Shoot
+- **SHIFT** - Rapid fire (hold for continuous stream of bullets)
 
 ## Game Features
 
 - Navigate a spaceship through an asteroid field
 - Shoot asteroids to break them into smaller pieces
 - Smaller asteroids yield points when destroyed
-- Collect powerups to temporarily enhance your shooting capabilities
+- Collect powerups to temporarily enhance your shooting capabilities with:
+  - Ultra-fast bullet stream with visual trails
+  - Enhanced bullet speed and visibility
+  - Glowing player ship indicator
+- Use SHIFT key for rapid fire even without powerups
 - Try to achieve the highest score by destroying as many asteroids as possible
 
 ## Game Over
