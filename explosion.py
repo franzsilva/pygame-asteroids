@@ -34,12 +34,11 @@ class ExplosionParticle(CircleShape):
 class Explosion:
     def __init__(self, x, y, size):
         # Create explosion particles
-        self.particles = []
         particle_count = int(EXPLOSION_PARTICLE_COUNT * (size / ASTEROID_MIN_RADIUS))
         
         for _ in range(particle_count):
             # Create a particle at the explosion position with a small random offset
             offset_x = random.uniform(-5, 5)
             offset_y = random.uniform(-5, 5)
-            particle = ExplosionParticle(x + offset_x, y + offset_y)
-            self.particles.append(particle)
+            # The ExplosionParticle constructor will add the particle to its containers
+            ExplosionParticle(x + offset_x, y + offset_y)
