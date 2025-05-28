@@ -9,7 +9,8 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shoot_timer = 0  # Timer variable for shooting cooldown
-        self.powerup_timer = 0  # Timer for powerup duration
+        self.powerup_timer = 0  # Timer for yellow powerup duration
+        self.blue_powerup_timer = 0  # Timer for blue powerup duration
     
     def triangle(self):
         forward = pygame.Vector2(0, -1).rotate(self.rotation)
@@ -20,9 +21,9 @@ class Player(CircleShape):
         return [a, b, c]
     
     def draw(self, screen):
-        # Add visual effect when powerup is active
-        if self.powerup_timer > 0:
-            # Draw a glowing outline when powerup is active
+        # Add visual effect when any powerup is active
+        if self.powerup_timer > 0 or self.blue_powerup_timer > 0:
+            # Draw a glowing outline when a powerup is active
             pygame.draw.polygon(screen, "cyan", self.triangle(), 4)
             pygame.draw.polygon(screen, "white", self.triangle(), 2)
         else:
@@ -52,9 +53,11 @@ class Player(CircleShape):
         if self.shoot_timer > 0:
             self.shoot_timer -= dt
             
-        # Decrease the powerup timer if active
+        # Decrease the powerup timers if active
         if self.powerup_timer > 0:
             self.powerup_timer -= dt
+        if self.blue_powerup_timer > 0:
+            self.blue_powerup_timer -= dt
     
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -63,7 +66,7 @@ class Player(CircleShape):
     def shoot(self, rapid_fire=False):
         # Determine the appropriate cooldown
         cooldown = PLAYER_SHOOT_COOLDOWN
-        if self.powerup_timer > 0:
+        if self.powerup_timer > 0 or self.blue_powerup_timer > 0:
             cooldown = POWERUP_SHOOT_COOLDOWN  # Very fast shooting during powerup
         elif rapid_fire:
             cooldown = RAPID_FIRE_COOLDOWN  # Fast shooting with shift key
@@ -73,20 +76,20 @@ class Player(CircleShape):
             # Reset the timer to the appropriate cooldown value
             self.shoot_timer = cooldown
             
-            # Get the front point of the triangle
-            forward = pygame.Vector2(0, -1).rotate(self.rotation)
-            front_point = self.position + forward * self.radius
-            
-            # Create the shot at the front point
-            shot = Shot(front_point.x, front_point.y)
-            shot.velocity = pygame.Vector2(0, -1).rotate(self.rotation)
-            
-            # Apply powerup effect if active
-            if self.powerup_timer > 0:
-                shot.velocity *= PLAYER_SHOOT_SPEED * POWERUP_SHOT_MULTIPLIER
-                # Make powerup shots more visible
-                shot.is_powerup_shot = True
-            else:
-                shot.velocity *= PLAYER_SHOOT_SPEED
-                shot.is_powerup_shot = False
+            # Determine shot spawn points
+            vertices = self.triangle() if self.blue_powerup_timer > 0 else [self.triangle()[0]]
+
+            for point in vertices:
+                shot = Shot(point.x, point.y)
+                direction = (point - self.position).normalize()
+                shot.velocity = direction
+
+                # Apply powerup effect if active
+                if self.powerup_timer > 0 or self.blue_powerup_timer > 0:
+                    shot.velocity *= PLAYER_SHOOT_SPEED * POWERUP_SHOT_MULTIPLIER
+                    shot.is_powerup_shot = True
+                else:
+                    shot.velocity *= PLAYER_SHOOT_SPEED
+                    shot.is_powerup_shot = False
+
 
