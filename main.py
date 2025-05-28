@@ -107,8 +107,11 @@ def run_game(screen, clock):
         # Check for powerup collection
         for powerup in powerups:
             if powerup.collides_with(player):
-                # Activate powerup
-                player.powerup_timer = POWERUP_DURATION
+                # Activate the appropriate powerup
+                if getattr(powerup, "color", "yellow") == "blue":
+                    player.blue_powerup_timer = POWERUP_DURATION
+                else:
+                    player.powerup_timer = POWERUP_DURATION
                 powerup.kill()  # Remove the powerup
         
         # Check collisions between bullets and asteroids
@@ -138,6 +141,14 @@ def run_game(screen, clock):
             stream_text = font.render("STREAM MODE ACTIVE!", True, "yellow")
             stream_rect = stream_text.get_rect(midtop=(SCREEN_WIDTH / 2, 50))
             screen.blit(stream_text, stream_rect)
+
+        if player.blue_powerup_timer > 0:
+            timer_text = font.render(f"POWERUP: {int(player.blue_powerup_timer)}", True, "blue")
+            timer_rect = timer_text.get_rect(midtop=(SCREEN_WIDTH / 2, 80))
+            screen.blit(timer_text, timer_rect)
+            stream_text = font.render("TRIANGLE SHOT ACTIVE!", True, "blue")
+            stream_rect = stream_text.get_rect(midtop=(SCREEN_WIDTH / 2, 110))
+            screen.blit(stream_text, stream_rect)
         
         pygame.display.flip()
 
@@ -159,8 +170,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()    
-
-
-if __name__ == "__main__":
     main()
+
+

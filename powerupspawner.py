@@ -18,4 +18,7 @@ class PowerUpSpawner(pygame.sprite.Sprite):
             x = random.uniform(padding, SCREEN_WIDTH - padding)
             y = random.uniform(padding, SCREEN_HEIGHT - padding)
             
-            PowerUp(x, y)  # The PowerUp will add itself to the containers
+            # Randomly choose a powerup color (yellow or blue)
+            color = random.choice(["yellow", "blue"])
+            PowerUp(x, y, color=color)  # The PowerUp will add itself to the containers
+
