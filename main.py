@@ -1,5 +1,6 @@
 import pygame
 import sys
+import math
 from constants import *
 from player import *
 from asteroid import Asteroid
@@ -9,6 +10,62 @@ from powerup import PowerUp
 from powerupspawner import PowerUpSpawner
 from explosion import ExplosionParticle, Explosion
 from menu_animation import MenuAnimation
+
+def draw_psychedelic_background(screen, time_elapsed):
+    """Draw a psychedelic background with rainbow colors and patterns."""
+    # Create a time-based color cycle
+    time_factor = time_elapsed * 2  # Speed up the effect
+    
+    # Fill with base gradient
+    for y in range(SCREEN_HEIGHT):
+        # Create a rainbow gradient that shifts over time
+        hue = (y / SCREEN_HEIGHT + time_factor) % 1.0
+        # Convert HSV to RGB for rainbow effect
+        rgb = hsv_to_rgb(hue, 0.8, 0.6)  # Lower brightness for better readability
+        color = (int(rgb[0] * 255), int(rgb[1] * 255), int(rgb[2] * 255))
+        pygame.draw.line(screen, color, (0, y), (SCREEN_WIDTH, y))
+    
+    # Add moving wave patterns
+    wave_offset = time_factor * 100
+    for x in range(0, SCREEN_WIDTH, 20):
+        wave_y = SCREEN_HEIGHT // 2 + int(math.sin((x + wave_offset) * 0.01) * 100)
+        hue = (x / SCREEN_WIDTH + time_factor * 2) % 1.0
+        rgb = hsv_to_rgb(hue, 1.0, 1.0)
+        color = (int(rgb[0] * 255), int(rgb[1] * 255), int(rgb[2] * 255))
+        pygame.draw.circle(screen, color, (x, wave_y), 10, 2)
+    
+    # Add spiraling patterns
+    center_x, center_y = SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2
+    for i in range(0, 360, 10):
+        angle = math.radians(i + time_factor * 50)
+        radius = 50 + 30 * math.sin(time_factor + i * 0.1)
+        x = center_x + int(radius * math.cos(angle))
+        y = center_y + int(radius * math.sin(angle))
+        hue = (i / 360 + time_factor) % 1.0
+        rgb = hsv_to_rgb(hue, 1.0, 0.8)
+        color = (int(rgb[0] * 255), int(rgb[1] * 255), int(rgb[2] * 255))
+        pygame.draw.circle(screen, color, (x, y), 8, 0)
+
+def hsv_to_rgb(h, s, v):
+    """Convert HSV color to RGB. h should be in [0,1], s in [0,1], v in [0,1]."""
+    if s == 0.0:
+        return (v, v, v)
+    i = int(h * 6.)
+    f = (h * 6.) - i
+    p, q, t = v * (1. - s), v * (1. - s * f), v * (1. - s * (1. - f))
+    i %= 6
+    if i == 0:
+        return (v, t, p)
+    if i == 1:
+        return (q, v, p)
+    if i == 2:
+        return (p, v, t)
+    if i == 3:
+        return (p, q, v)
+    if i == 4:
+        return (t, p, v)
+    if i == 5:
+        return (v, p, q)
 
 def show_menu(screen, clock):
     """Show the game menu with options and handle selection."""
@@ -69,6 +126,8 @@ def run_game(screen, clock):
     """Run the actual game loop."""
     # Initialize counter for destroyed asteroids
     destroyed_asteroids = 0
+    # Track elapsed time for psychedelic background
+    total_time = 0
     
     updatable_group = pygame.sprite.Group()
     drawable_group = pygame.sprite.Group()
@@ -95,8 +154,14 @@ def run_game(screen, clock):
             if event.type == pygame.QUIT:
                 return MENU_STATE  # Return to menu instead of exiting directly
         dt = clock.tick(60) / 1000
+        total_time += dt
 
-        screen.fill("black")
+        # Draw background based on powerup status
+        if player.powerup_timer > 0:
+            draw_psychedelic_background(screen, total_time)
+        else:
+            screen.fill("black")
+            
         updatable_group.update(dt)
 
         for asteroid in asteroids:
