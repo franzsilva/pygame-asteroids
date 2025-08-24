@@ -5,8 +5,9 @@ from constants import *
 
 
 class PowerUp(CircleShape):
-    def __init__(self, x, y):
+    def __init__(self, x, y, color="yellow"):
         super().__init__(x, y, POWERUP_RADIUS)
+        self.color = color
         # Set random velocity for the powerup
         self.velocity = pygame.Vector2(
             random.uniform(-1, 1),
@@ -14,8 +15,8 @@ class PowerUp(CircleShape):
         ).normalize() * POWERUP_SPEED
     
     def draw(self, screen):
-        # Draw the powerup as a yellow circle with a star-like shape
-        pygame.draw.circle(screen, "yellow", self.position, self.radius, 0)
+        # Draw the powerup using its color
+        pygame.draw.circle(screen, self.color, self.position, self.radius, 0)
         pygame.draw.circle(screen, "white", self.position, self.radius, 2)
     
     def update(self, dt):
@@ -31,3 +32,4 @@ class PowerUp(CircleShape):
         # Keep the powerup within the screen bounds
         self.position.x = max(self.radius, min(SCREEN_WIDTH - self.radius, self.position.x))
         self.position.y = max(self.radius, min(SCREEN_HEIGHT - self.radius, self.position.y))
+
