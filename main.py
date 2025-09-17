@@ -10,6 +10,8 @@ from powerup import PowerUp
 from powerupspawner import PowerUpSpawner
 from explosion import ExplosionParticle, Explosion
 from menu_animation import MenuAnimation
+from bouncingball import BouncingBall
+from bouncingballspawner import BouncingBallSpawner
 
 def draw_psychedelic_background(screen, time_elapsed):
     """Draw a psychedelic background with rainbow colors and patterns."""
@@ -135,6 +137,7 @@ def run_game(screen, clock):
     shots = pygame.sprite.Group()
     powerups = pygame.sprite.Group()
     explosion_particles = pygame.sprite.Group()
+    bouncing_balls = pygame.sprite.Group()
 
     Player.containers = (updatable_group, drawable_group)
     Asteroid.containers = (asteroids, updatable_group, drawable_group)
@@ -143,9 +146,12 @@ def run_game(screen, clock):
     PowerUp.containers = (powerups, updatable_group, drawable_group)
     PowerUpSpawner.containers = updatable_group
     ExplosionParticle.containers = (explosion_particles, updatable_group, drawable_group)
+    BouncingBall.containers = (bouncing_balls, updatable_group, drawable_group)
+    BouncingBallSpawner.containers = updatable_group
     
     asteroid_field = AsteroidField()
     powerup_spawner = PowerUpSpawner()
+    ball_spawner = BouncingBallSpawner(bouncing_balls)
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 

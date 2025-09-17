@@ -35,3 +35,10 @@ GAME_STATE = 1
 MENU_ASCII_CHAR_COUNT = 20  # Number of ASCII characters in animation
 MENU_ASCII_SPEED_MIN = 30   # Minimum speed of ASCII characters
 MENU_ASCII_SPEED_MAX = 80   # Maximum speed of ASCII characters
+
+# Bouncing ball constants
+BALL_RADIUS = 25
+BALL_MIN_SPEED = 100
+BALL_MAX_SPEED = 200
+BALL_SPAWN_RATE = 8.0  # seconds between ball spawns
+BALL_MAX_COUNT = 3     # maximum number of balls on screen
